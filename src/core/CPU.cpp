@@ -55,13 +55,37 @@ void CPU::execInstructionBuffer(unsigned char *_buffer, int _size)
     while (mRunning && mIP < mBufferSize)
     {
         unsigned char opcode = mBuffer[mIP];
+        std::cout << "Executing opcode \"" << (unsigned int)opcode << "\"" << std::endl;
         Instruction* instr = mInstructionSet[opcode];
         if (instr == 0)
         {
-            std::cerr << "Unknown opcode \"" << opcode << "\" ! Skipping." << std::endl;
+            std::cerr << "Unknown opcode \"" << (unsigned int)opcode << "\" ! Skipping." << std::endl;
             continue;
         }
-        instr();
+        (*instr)();
         mIP += instr->Size;
     }
+}
+
+unsigned char* CPU::getStack(int &_size)
+{
+    _size = mStackSize;
+    return mStack;
+}
+unsigned char* CPU::getInstructionBuffer(int &_size)
+{
+    _size = mBufferSize;
+    return mBuffer;
+}
+int& CPU::getSP()
+{
+    return mSP;
+}
+int& CPU::getIP()
+{
+    return mIP;
+}
+bool& CPU::getRunning()
+{
+    return mRunning;
 }

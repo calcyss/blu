@@ -20,5 +20,5 @@ std::vector<Token> Tokenizer::tokenize(std::string _data)
 
     }
 
-    return ret;
+    return std::vector<Token>();
 }

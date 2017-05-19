@@ -8,7 +8,8 @@ int main(int argc, char** argv)
 {
     blu::Assembler as;
     int buf_size = 0;
-    unsigned char* buf = as.assemble("test.asm", buf_size);
+    unsigned char* buf = as.assemble("./test.asm", buf_size);
+    std::cout << "buf_size: " << buf_size << std::endl;
     blu::CPU cpu;
     cpu.execInstructionBuffer(buf, buf_size);
     std::string s;

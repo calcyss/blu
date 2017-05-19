@@ -32,13 +32,14 @@ push::push(CPU* _cpu) : Instruction(_cpu)
 }
 void push::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
     unsigned char val = buffer[IP + 1];
-    mStack[SP] = val;
+    stack[SP] = val;
     SP++;
 
 }
@@ -49,7 +50,7 @@ pop::pop(CPU* _cpu) : Instruction(_cpu)
 }
 void pop::operator()()
 {
-    mCPU->mSP--;
+    mCPU->getSP()++;
 }
 
 popn::popn(CPU* _cpu) : Instruction(_cpu)
@@ -59,10 +60,11 @@ popn::popn(CPU* _cpu) : Instruction(_cpu)
 }
 void popn::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
     unsigned char val = buffer[IP + 1];
     SP -= val;
@@ -75,10 +77,11 @@ add::add(CPU* _cpu) : Instruction(_cpu)
 }
 void add::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
     unsigned char val1 = stack[SP - 2];
     unsigned char val2 = stack[SP - 1];
@@ -94,10 +97,11 @@ sub::sub(CPU* _cpu) : Instruction(_cpu)
 }
 void sub::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
     unsigned char val1 = stack[SP - 2];
     unsigned char val2 = stack[SP - 1];
@@ -113,10 +117,11 @@ mul::mul(CPU* _cpu) : Instruction(_cpu)
 }
 void mul::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
     unsigned char val1 = stack[SP - 2];
     unsigned char val2 = stack[SP - 1];
@@ -132,10 +137,11 @@ div::div(CPU* _cpu) : Instruction(_cpu)
 }
 void div::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
     unsigned char val1 = stack[SP - 2];
     unsigned char val2 = stack[SP - 1];
@@ -187,7 +193,7 @@ exit::exit(CPU* _cpu) : Instruction(_cpu)
 }
 void exit::operator()()
 {
-    mCPU->mRunning = false;
+    mCPU->getRunning() = false;
 }
 
 prnt::prnt(CPU* _cpu) : Instruction(_cpu)
@@ -197,10 +203,11 @@ prnt::prnt(CPU* _cpu) : Instruction(_cpu)
 }
 void prnt::operator()()
 {
-    int &IP = mCPU->mIP;
-    int &SP = mCPU->mSP;
-    unsigned char *buffer = mCPU->mBuffer;
-    unsigned char *stack = mCPU->mStack;
+    int &IP = mCPU->getIP();
+    int &SP = mCPU->getSP();
+    int buffer_size, stack_size;
+    unsigned char *buffer = mCPU->getInstructionBuffer(buffer_size);
+    unsigned char *stack = mCPU->getStack(stack_size);
 
-    std::cout << "Value at stack address " << SP - 1 << ": " << stack[SP - 1] << "." << std::endl;
+    std::cout << "Value at stack address " << SP - 1 << ": " << (unsigned int)stack[SP - 1] << "." << std::endl;
 }
