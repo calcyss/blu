@@ -1,3 +1,6 @@
+#ifndef BLU_TOKENIZER_HPP
+#define BLU_TOKENIZER_HPP
+
 #include <vector>
 #include <string>
 #include <functional>
@@ -45,10 +48,12 @@ namespace blu
 
         void registerChecker(TokenChecker& _checker);
 
-        std::vector<Token> tokenize(std::string _token, std::string _data);
+        std::vector<Token> tokenize(std::string _data);
     private:
         std::vector<TokenChecker> mCheckers;
 
         std::string swallowWhile();
     };
 }
+
+#endif
