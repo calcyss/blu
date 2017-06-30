@@ -1,10 +1,12 @@
-#include <blu/core/Assembler.hpp>
+#include <blu/parser/Assembler.hpp>
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <cstdio>
+
+#include <blu/core/Instruction.hpp>
 
 using namespace blu;
 
@@ -24,8 +26,10 @@ unsigned char* Assembler::assemble(std::string _filename, int &_size)
     std::ifstream file(_filename);
 
     std::string line;
+
     while (std::getline(file, line))
     {
+        unsigned char opcode;
         if (stringStartsWith(line, "push"))
         {
             const char* cline = line.c_str();
@@ -36,20 +40,42 @@ unsigned char* Assembler::assemble(std::string _filename, int &_size)
             ret.push_back(1);
             cval = val;
             ret.push_back(cval);
-            std::cout << "encountered instruction \"" << cmd <<"\" with opcode \"1\"." << std::endl;
             delete cmd;
         }
         else if (stringStartsWith(line, "add"))
         {
-            ret.push_back(4);
+            opcode = is::add;
+            ret.push_back(opcode);
+        }
+        else if (stringStartsWith(line, "sub"))
+        {
+            opcode = is::sub;
+            ret.push_back(opcode);
+        }
+        else if (stringStartsWith(line, "div"))
+        {
+            opcode = is::div;
+            ret.push_back(opcode);
+        }
+        else if (stringStartsWith(line, "mul"))
+        {
+            opcode = is::mul;
+            ret.push_back(opcode);
+        }
+        else if (stringStartsWith(line, "pop"))
+        {
+            opcode = is::pop;
+            ret.push_back(opcode);
         }
         else if (stringStartsWith(line, "prnt"))
         {
-            ret.push_back(13);
+            opcode = is::prnt;
+            ret.push_back(opcode);
         }
         else if (stringStartsWith(line, "exit"))
         {
-            ret.push_back(12);
+            opcode = is::exit;
+            ret.push_back(opcode);
         }
     }
 

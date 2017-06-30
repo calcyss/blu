@@ -7,6 +7,33 @@ namespace blu
 {
     class CPU;
 
+    namespace is
+    {
+        enum InstructionSet
+        {
+            nop = 0,
+
+            push,
+            pushn,
+            pop,
+            popn,
+
+            add,
+            sub,
+            mul,
+            div,
+
+            jmp,
+            call,
+            ret,
+
+            halt,
+            exit,
+
+            prnt
+        };
+    }
+
     class Instruction
     {
     public:
@@ -14,6 +41,7 @@ namespace blu
         virtual ~Instruction();
 
         virtual void operator()() = 0;
+
         int Size;
         unsigned char Code;
     protected:

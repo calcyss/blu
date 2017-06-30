@@ -1,0 +1,6 @@
+[submodule "lib/asmjit"]
+	path = lib/asmjit
+	url = git@github.com:calcyss/asmjit.git
+[submodule "lib/catch"]
+	path = lib/catch
+	url = git@github.com:calcyss/Catch.git

@@ -3,35 +3,37 @@
 #include <iostream>
 
 #include <blu/core/Instruction.hpp>
+#include <blu/core/Stack.hpp>
+#include <blu/core/InstructionBuffer.hpp>
+#include <blu/core/StackFrame.hpp>
 
 using namespace blu;
 
 CPU::CPU(int _stackSize)
 {
-    mStack = new unsigned char[_stackSize];
-    mSP = 0;
+
     mRunning = false;
-
+    mStack = new Stack();
     //Fill instruction set
-    mInstructionSet[0] = new nop(this);
+    mInstructionSet[is::nop] = new blu::nop(this);
 
-    mInstructionSet[1] = new push(this);
-    mInstructionSet[2] = new pop(this);
-    mInstructionSet[3] = new popn(this);
+    mInstructionSet[is::push] = new blu::push(this);
+    mInstructionSet[is::pop] = new blu::pop(this);
+    mInstructionSet[is::popn] = new blu::popn(this);
 
-    mInstructionSet[4] = new add(this);
-    mInstructionSet[5] = new sub(this);
-    mInstructionSet[6] = new mul(this);
-    mInstructionSet[7] = new div(this);
+    mInstructionSet[is::add] = new blu::add(this);
+    mInstructionSet[is::sub] = new blu::sub(this);
+    mInstructionSet[is::mul] = new blu::mul(this);
+    mInstructionSet[is::div] = new blu::div(this);
 
-    mInstructionSet[8] = new jmp(this);
-    mInstructionSet[9] = new call(this);
-    mInstructionSet[10] = new ret(this);
+    mInstructionSet[is::jmp] = new blu::jmp(this);
+    mInstructionSet[is::call] = new blu::call(this);
+    mInstructionSet[is::ret] = new blu::ret(this);
 
-    mInstructionSet[11] = new halt(this);
-    mInstructionSet[12] = new exit(this);
+    mInstructionSet[is::halt] = new blu::halt(this);
+    mInstructionSet[is::exit] = new blu::exit(this);
 
-    mInstructionSet[13] = new prnt(this);
+    mInstructionSet[is::prnt] = new blu::prnt(this);
     //
 }
 CPU::~CPU()
@@ -40,51 +42,31 @@ CPU::~CPU()
     {
         delete pair.second;
     }
-    delete[] mStack;
 }
 
-void CPU::execInstructionBuffer(unsigned char *_buffer, int _size)
+void CPU::execInstructionBuffer(InstructionBuffer& _buffer)
 {
-    mIP = 0;
+    StackFrame* sf = new StackFrame();
+    sf->Buffer = &_buffer;
+    sf->ReturnAddress = 0;
+
+    mStackFrames.push(sf);
 
     mRunning = true;
 
-    mBuffer = _buffer;
-    mBufferSize = _size;
+    StackFrame* current = mStackFrames.top();
 
-    while (mRunning && mIP < mBufferSize)
+    while (mRunning)
     {
-        unsigned char opcode = mBuffer[mIP];
-        std::cout << "Executing opcode \"" << (unsigned int)opcode << "\"" << std::endl;
-        Instruction* instr = mInstructionSet[opcode];
-        if (instr == 0)
-        {
-            std::cerr << "Unknown opcode \"" << (unsigned int)opcode << "\" ! Skipping." << std::endl;
-            continue;
-        }
-        (*instr)();
-        mIP += instr->Size;
+        unsigned char opcode = current->Buffer[current->Buffer->getIP()];
     }
 }
 
-unsigned char* CPU::getStack(int &_size)
+Stack* CPU::getCurrentStack()
 {
-    _size = mStackSize;
-    return mStack;
+    return mStacks.top();
 }
-unsigned char* CPU::getInstructionBuffer(int &_size)
-{
-    _size = mBufferSize;
-    return mBuffer;
-}
-int& CPU::getSP()
-{
-    return mSP;
-}
-int& CPU::getIP()
-{
-    return mIP;
-}
+
 bool& CPU::getRunning()
 {
     return mRunning;
