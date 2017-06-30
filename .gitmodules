@@ -4,3 +4,6 @@
 [submodule "lib/catch"]
 	path = lib/catch
 	url = git@github.com:calcyss/Catch.git
+[submodule "lib/simple.vm"]
+	path = lib/simple.vm
+	url = git@github.com:calcyss/simple.vm.git
